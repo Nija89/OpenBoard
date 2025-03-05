@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .logout-btn:hover {
+                    background-color: red !important;
+                    color: white !important;
+        }
+    </style>
+</head>
+<body>
+<!-- Top Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/home}">LOGO</a>
+        <div class="ms-auto d-flex align-items-center">
+            <a th:href="@{/publicPost}" class="btn btn-outline-primary me-2">View Public Posts</a>
+            <a th:href="@{/top10PublicPost}" class="btn btn-outline-secondary me-2">Top 10 Public Posts</a>
+
+            <!-- Profile Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Profile
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <li><a th:href="@{/profile}" class="dropdown-item">Profile</a></li>
+                    <li>
+                        <form th:action="@{/logout}" method="POST">
+                            <button type="submit" class="dropdown-item text-danger border-0 bg-transparent logout-btn">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container d-flex justify-content-center align-items-start" style="min-height: 70vh;">
+    <div class="row w-100">
+        <!-- Left Container: User Information & Change Password -->
+        <div class="col-md-4">
+            <div class="card profile-card">
+                <div class="card-header">
+                    <h5>User Information</h5>
+                </div>
+                <div class="card-body" th:object="${user}">
+                    <p><strong>Username:</strong> <span th:text="*{username}"></span></p>
+                    <p><strong>Email:</strong> <span th:text="*{email}"></span></p>
+                    <p><strong>Description:</strong> <span th:text="*{description}"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Container: Profile Update Form -->
+        <div class="col-md-8">
+            <div th:if="${success}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+
+            <!-- Profile Update Form -->
+            <form th:action="@{/processProfile}" th:object="${user}" method="POST" class="p-4 border rounded shadow mb-4">
+                <input type="hidden" th:field="*{id}" id="id">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" th:field="*{username}" id="username" name="username" readonly>
+                     </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email (*)</label>
+                    <input type="text" class="form-control" th:field="*{email}" id="email" name="email">
+                    <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                </div>
+
+                <input type="hidden" th:field="*{password}">
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" th:field="*{description}" id="description" name="description" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Update</button>
+            </form>
+
+            <!-- Password Change Form -->
+            <div th:if="${result}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${result}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+
+            <form th:action="@{/processProfilePassword}" th:object="${user}" method="POST" class="p-4 border rounded shadow mb-4">
+                <input type="hidden" th:field="*{id}" id="currentId">
+                <input type="hidden" class="form-control" th:field="*{username}" id="currentUsername">
+                <input type="hidden" class="form-control" th:field="*{email}" id="currentEmail">
+                <input type="hidden" class="form-control" th:field="*{description}" id="currentDescription">
+                <input type="hidden" class="form-control" th:field="*{password}" id="currentUserPassword">
+
+                <div class="mb-3">
+                    <label for="currentPassword" class="form-label">Current Password (*)</label>
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+                </div>
+
+                <div class="mb-3">
+                    <label for="newPassword" class="form-label">New Password (*)</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword">
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Update Password</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
