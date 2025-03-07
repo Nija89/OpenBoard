@@ -6,6 +6,9 @@ Public posts allow users to interact with them by liking or disliking. Additiona
 
 ---
 ![image alt](https://github.com/Nija89/OpenBoard/blob/c220590d3e6a4949e7fed8419126bd6c7c2adb1c/src/main/resources/static/images/1.png)
+![image alt](https://github.com/Nija89/OpenBoard/blob/dc5fd53969fda9bbd90e1d26555730ae3e0c3a0e/src/main/resources/static/images/2.png)
+![image alt](https://github.com/Nija89/OpenBoard/blob/dc5fd53969fda9bbd90e1d26555730ae3e0c3a0e/src/main/resources/static/images/3.png)
+![image alt](https://github.com/Nija89/OpenBoard/blob/dc5fd53969fda9bbd90e1d26555730ae3e0c3a0e/src/main/resources/static/images/5.png)
 
 ### Feature User Roles:
 
