@@ -23,12 +23,36 @@ public interface MainService {
 
     void updatePost(Post post);
 
-    public void deletePostById(int id);
+    void deletePostById(int id);
+
+    void deletePublicPostById(int id);
 
     List<Post> findAllUserPost();
 
     List<Post> findPublicPost();
 
+    void likePublicPost(int id);
+
+    void disLikePublicPost(int id);
+
+    List<Post> topTenPost();
+
     Post findPostById(int id);
+
+    List<User> findAllMemberUser();
+
+    List<User> findAllModeratorUser();
+
+    List<User> findDisabledUser();
+
+    void promoteUserById(int id);
+
+    void demoteUserById(int id);
+
+    void disableUserById(int id);
+
+    void enableUserById(int id);
+
+    void deleteUserById(int id);
 
 }

@@ -29,7 +29,7 @@ public class MainServiceImpl implements MainService {
         this.roleDAO = roleDAO;
         this.userDAO = userDAO;
         this.postDAO = postDAO;
-        this.bCryptPasswordEncoder= new BCryptPasswordEncoder();
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
@@ -41,7 +41,9 @@ public class MainServiceImpl implements MainService {
     @Transactional
     public void createUser(User updatedUser) {
         updatedUser.setPassword("{bcrypt}" + bCryptPasswordEncoder.encode(updatedUser.getPassword()));
-
+        String username = updatedUser.getUsername();
+        username = username.substring(0,1).toUpperCase() + username.substring(1);
+        updatedUser.setUsername(username);
         updatedUser.addRole(roleDAO.findRoleByName("ROLE_MEMBER"));
 
         userDAO.createUser(updatedUser);
@@ -106,6 +108,7 @@ public class MainServiceImpl implements MainService {
 
         postDAO.createPost(post);
     }
+
     @Override
     @Transactional
     public void updatePost(Post post) {
@@ -132,6 +135,12 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
+    @Transactional
+    public void deletePublicPostById(int id) {
+        postDAO.deletePublicPostById(id);
+    }
+
+    @Override
     public List<Post> findAllUserPost() {
         return userDAO.findAllUserPost();
     }
@@ -142,11 +151,111 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
+    @Transactional
+    public void likePublicPost(int id) {
+        String name = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = findUserByName(name);
+        Post post = findPostById(id);
+        int totalLikes = post.getLikes();
+
+        if (post.getUserLikedSet().contains(user)) {
+            post.getUserLikedSet().remove(user);
+            user.getLikedPost().remove(post);
+            totalLikes = Math.max(0, totalLikes - 1);
+        } else {
+            post.getUserLikedSet().add(user);
+            user.getLikedPost().add(post);
+            totalLikes += 1;
+        }
+
+        post.setLikes(totalLikes);
+
+        postDAO.likePublicPost(post);
+    }
+
+    @Override
+    @Transactional
+    public void disLikePublicPost(int id) {
+        String name = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = findUserByName(name);
+        Post post = findPostById(id);
+        int totalDislikes = post.getDislikes();
+
+        if (post.getUserDislikedSet().contains(user)) {
+            post.getUserDislikedSet().remove(user);
+            user.getDislikedPost().remove(post);
+            totalDislikes = Math.max(0, totalDislikes - 1);
+        } else {
+            post.getUserDislikedSet().add(user);
+            user.getDislikedPost().add(post);
+            totalDislikes += 1;
+        }
+
+        post.setDislikes(totalDislikes);
+        postDAO.disLikePublicPost(post);
+    }
+
+    @Override
+    public List<Post> topTenPost() {
+        return postDAO.topTenPost();
+    }
+
+    @Override
     public Post findPostById(int id) {
         return postDAO.findPostById(id);
     }
 
+    @Override
+    public List<User> findAllMemberUser() {
+        return userDAO.findAllMemberUser();
+    }
 
 
+    @Override
+    public List<User> findAllModeratorUser() {
+        return userDAO.findAllModeratorUser();
+    }
 
+    @Override
+    public List<User> findDisabledUser() {
+        return userDAO.findDisabledUser();
+    }
+
+    @Override
+    @Transactional
+    public void promoteUserById(int id) {
+        userDAO.promoteUserById(id);
+    }
+
+    @Override
+    @Transactional
+    public void demoteUserById(int id) {
+        userDAO.demoteUserById(id);
+    }
+
+    @Override
+    @Transactional
+    public void disableUserById(int id) {
+        userDAO.disableUserById(id);
+    }
+
+    @Override
+    @Transactional
+    public void enableUserById(int id){
+        userDAO.enableUserById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserById(int id){
+        User user = findUserById(id);
+
+
+        List<Post> postList = user.getPostList();
+        for(Post x : postList){
+            postDAO.deleteById(x.getId());
+        }
+
+        userDAO.deleteUserById(id);
+    }
 }

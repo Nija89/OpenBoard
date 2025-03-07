@@ -3,11 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>Top 10 Public Posts</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
+
         .top-posts-container {
             padding: 40px 0;
         }
@@ -18,7 +19,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: transform 0.3s ease-in-out;
-            margin-bottom: 20px;
         }
 
         .post-card:hover {
@@ -35,8 +35,6 @@
 
         .post-body {
             padding: 20px;
-            height: 200px;
-            overflow: hidden;
         }
 
         .post-text {
@@ -66,24 +64,12 @@
             text-decoration: underline;
             color: #007bff;
         }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            padding: 10px 20px;
-        }
-
-        .btn-group .btn {
-            flex: 1;
-        }
-
-
     </style>
 </head>
 
 <body>
 
-<!-- Top Navigation Bar -->
+<!-- Top Navigation Bar (Unchanged) -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
     <div class="container">
         <a class="navbar-brand" th:href="@{/home}">
@@ -106,8 +92,7 @@
                     <li><a th:href="@{/profile}" class="dropdown-item">Profile</a></li>
                     <li>
                         <form th:action="@{/logout}" method="POST">
-                            <button type="submit"
-                                    class="dropdown-item text-danger border-0 bg-transparent">Logout</button>
+                            <button type="submit" class="dropdown-item text-danger border-0 bg-transparent">Logout</button>
                         </form>
                     </li>
                 </ul>
@@ -116,73 +101,39 @@
     </div>
 </nav>
 
-<!-- Home Page Content -->
+<!-- Top Posts Section -->
 <div class="container top-posts-container">
-    <h2 class="text-center mb-4">Hello <span sec:authentication="principal.username"></span>!! Welcome to your
-        DashBoard!!</h2>
-    <div class="text-center mb-4">
-        <a th:href="@{/post}" class="btn btn-success">Add New Post</a>
+    <h2 class="text-center mb-4">🔥 Top 10 Public Posts</h2>
+    <div th:if="${topPost.isEmpty()}" class="text-center mb-4">
+        No Post Available.
     </div>
-
-    <div class="text-center mb-4">
-        <div th:if="${success}">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <span th:text="${success}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-        <div th:if="${accessDeny}">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <span th:text="${accessDeny}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-        <div th:if="${postList.isEmpty()}">
-            No Post Available.
-        </div>
-    </div>
-
-    <!-- Cards in a 3-column layout -->
     <div class="row">
-        <!-- Loop through posts -->
-        <div th:each="temp, iterStat : ${postList}" class="col-md-4 mb-4">
-            <div class="post-card" data-bs-toggle="modal" data-bs-target="#postModal" th:data-id="${iterStat.count}"
-                 th:data-title="${temp.title}" th:data-description="${temp.description}"
-                 th:data-createdAt="${temp.createdAt}" th:data-likes="${temp.likes}"
-                 th:data-dislikes="${temp.dislikes}" th:data-updatedAt="${temp.updatedAt}"
-                 style="text-decoration: none;">
-                <!-- Post Header -->
+        <div th:each="temp, iterStat : ${topPost}" class="col-12 mb-4">
+            <span class="view-more-btn" data-bs-toggle="modal" data-bs-target="#postModal"
+                  th:data-title="${temp.title}" th:data-description="${temp.description}"
+                  th:data-createdAt="${temp.createdAt}" th:data-likes="${temp.likes}" th:data-dislikes="${temp.dislikes}"
+                  th:data-updatedAt="${temp.updatedAt}" style="text-decoration: none;">
+            <div class="post-card">
                 <div class="post-header">
-                    <span th:text="${iterStat.count} + '. ' + ${temp.user.getUsername()}"></span> |
+                    <span th:text="${iterStat.count} + '. ' + ${temp.user.username}"></span> |
                     <span class="text-white" style="font-size: 12px;"><i class="bi bi-clock"></i> Created:
                         <span th:text="${temp.createdAt}"></span></span>
-
                 </div>
-                <!-- Post Body -->
-                <div class="post-body bg-light text-dark">
-                    <p class="text-muted"> Title : <span th:text="${temp.title}"></span></p>
-                    <hr>
+                <div class="post-body">
+                    <p class="text-muted">Title: <span th:text="${temp.title}"></span></p>
                     <p class="post-text" th:text="${temp.description}"></p>
-                </div>
 
-                <!-- Post Footer -->
+                </div>
                 <div class="post-footer">
-                        <span class="likes"><i class="bi bi-hand-thumbs-up-fill"></i> <span
-                                th:text="${temp.likes}"></span></span>
-                    <span class="likes"><i class="bi bi-hand-thumbs-down-fill"></i> <span
-                            th:text="${temp.dislikes}"></span></span>
-                    <span><i class="bi bi-calendar-check"></i> Updated: <span
-                            th:text="${temp.updatedAt}"></span></span>
+                    <span class="likes">
+                        <i class="bi bi-hand-thumbs-up-fill"></i> <span th:text="${temp.likes}"></span> |
+                        <i class="bi bi-hand-thumbs-down-fill"></i> <span th:text="${temp.dislikes}"></span>
+
+                    </span>
+                    <span><i class="bi bi-calendar-check"></i> Updated: <span th:text="${temp.updatedAt}"></span></span>
                 </div>
             </div>
-            <div class="btn-group mb-3">
-                <a th:href="@{/updatePost(id=${temp.id})}" class="btn btn-warning">
-                    <i class="bi bi-pencil-square"></i> Update
-                </a>
-                <a th:href="@{/deletePost(id=${temp.id})}" class="btn btn-danger">
-                    <i class="bi bi-trash"></i> Delete
-                </a>
-            </div>
+                 </span>
         </div>
     </div>
 </div>
@@ -198,9 +149,8 @@
             <div class="modal-body">
                 <p><strong>Created on:</strong> <span id="modalCreatedAt"></span></p>
                 <p><strong>Description:</strong> <span id="modalDescription"></span></p>
-                <p><strong>Likes:</strong> <span id="modalLikes"></span> | <strong>Dislikes:</strong> <span
-                        id="modalDislikes"></span></p>
-                <p><strong>Updated:</strong> <span id="modalUpdatedAt"></span></p>
+                <p><strong>Likes:</strong> <span id="modalLikes"></span> | <strong>Dislikes:</strong> <span id="modalDislikes"></span></p>
+                <p><strong>Updated on:</strong> <span id="modalUpdatedAt"></span></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -211,9 +161,9 @@
 
 <script>
     // JavaScript to handle dynamic modal content
-    var viewMoreBtns = document.querySelectorAll('.post-card');
-    viewMoreBtns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
+    var viewMoreBtns = document.querySelectorAll('.view-more-btn');
+    viewMoreBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
             var title = this.getAttribute('data-title');
             var description = this.getAttribute('data-description');
             var createdAt = this.getAttribute('data-createdAt');

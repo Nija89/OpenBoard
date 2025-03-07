@@ -14,16 +14,20 @@ CREATE TABLE user (
 -- Role table
 CREATE TABLE role (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    rol VARCHAR(50) NOT NULL UNIQUE
+    role_name VARCHAR(50) NOT NULL UNIQUE
 );
+
+INSERT INTO role (role_name) VALUES ('ROLE_ADMIN');
+INSERT INTO role (role_name) VALUES ('ROLE_MODERATOR');
+INSERT INTO role (role_name) VALUES ('ROLE_MEMBER');
 
 -- User-Role mapping table
 CREATE TABLE user_role (
     user_id INT,
     role_id INT,
     PRIMARY KEY (user_id, role_id),
-    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
-    FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES user(id),
+    FOREIGN KEY (role_id) REFERENCES role(id)
 );
 
 -- Post table
@@ -37,6 +41,24 @@ CREATE TABLE post (
     user_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+-- Post-Like Mapping Table
+CREATE TABLE post_like (
+    post_id INT,
+    user_id INT,
+    PRIMARY KEY (post_id, user_id),
+    FOREIGN KEY (post_id) REFERENCES post(id) ,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+-- Post-DisLike Mapping Table
+CREATE TABLE post_dislike (
+    post_id INT,
+    user_id INT,
+    PRIMARY KEY (post_id, user_id),
+    FOREIGN KEY (post_id) REFERENCES post(id) ,
+    FOREIGN KEY (user_id) REFERENCES user(id)
 );
 

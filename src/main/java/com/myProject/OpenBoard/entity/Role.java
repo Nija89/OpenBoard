@@ -61,6 +61,12 @@ public class Role{
         userList.add(newUser);
     }
 
+    public void removeUser(User user){
+        if(userList != null){
+            userList.remove(user);
+        }
+    }
+
     @Override
     public String toString() {
         return "Role{" +

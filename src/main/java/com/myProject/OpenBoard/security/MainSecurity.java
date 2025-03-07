@@ -2,6 +2,7 @@ package com.myProject.OpenBoard.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -34,7 +35,9 @@ public class MainSecurity {
         httpSecurity
                 .authorizeHttpRequests(configurer ->
                     configurer
-                            .requestMatchers("/","/login", "/register", "/processSignupForm").permitAll()
+                            .requestMatchers("/", "/images/**", "/login", "/register", "/processSignupForm").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/deletePublicPost/**").hasAnyRole("MODERATOR", "ADMIN")
+                            .requestMatchers(HttpMethod.GET, "/viewUser/**").hasRole("ADMIN")
                             .anyRequest().authenticated()
                 )
                 .formLogin(form ->
@@ -53,7 +56,7 @@ public class MainSecurity {
                 )
                 .exceptionHandling(configurer ->
                         configurer
-                                .accessDeniedPage("/access-denied")
+                                .accessDeniedPage("/accessDenied")
                 )
         ;
         return httpSecurity.build();

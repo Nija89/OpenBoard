@@ -5,6 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "post")
@@ -39,10 +43,22 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            mappedBy = "likedPost")
+    private Set<User> UserLikedSet = new HashSet<>();
+
+
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            mappedBy = "dislikedPost")
+    private Set<User> userDislikedSet = new HashSet<>();
+
+
     public Post() {
     }
 
-    public Post(String title, String description, boolean showPost,Timestamp updatedAt) {
+    public Post(String title, String description, boolean showPost, Timestamp updatedAt) {
         this.title = title;
         this.description = description;
         this.showPost = showPost;
@@ -77,7 +93,7 @@ public class Post {
         return showPost;
     }
 
-    public boolean getShowPost(){
+    public boolean getShowPost() {
         return this.showPost;
     }
 
@@ -92,6 +108,8 @@ public class Post {
     public void setLikes(int likes) {
         this.likes = likes;
     }
+
+
 
     public int getDislikes() {
         return dislikes;
@@ -119,6 +137,22 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<User> getUserLikedSet() {
+        return UserLikedSet;
+    }
+
+    public void setUserLikedSet(Set<User> UserLikedSet) {
+        this.UserLikedSet = UserLikedSet;
+    }
+
+    public Set<User> getUserDislikedSet() {
+        return userDislikedSet;
+    }
+
+    public void setUserDislikedSet(Set<User> userDislikedSet) {
+        this.userDislikedSet = userDislikedSet;
     }
 
     @Override

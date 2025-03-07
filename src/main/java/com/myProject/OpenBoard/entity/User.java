@@ -7,8 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "user")
@@ -24,8 +23,8 @@ public class User {
     private String username;
 
     @NotNull(message = "is required.")
-    @Size(min = 6, message = "Must contain at least 6 character.")
-    @Column(name = "password")
+    @Size(min = 5, message = "Be at least 5 characters long.")
+   @Column(name = "password")
     private String password;
 
     @NotNull(message = "is required.")
@@ -34,19 +33,39 @@ public class User {
     private String email;
 
     @Column(name = "active")
-    private final boolean active = true;
+    private boolean active = true;
 
     @Lob
     @Column(name = "description")
     private String description;
 
     @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.DETACH,  CascadeType.PERSIST, CascadeType.REFRESH},
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             mappedBy = "userList")
     private List<Role> roleList;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
     private List<Post> postList;
+
+
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name="post_like",
+            joinColumns = @JoinColumn(name= "user_id"),
+            inverseJoinColumns = @JoinColumn(name="post_id")
+    )
+    private Set<Post> likedPost = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "post_dislike",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id")
+    )
+    private Set<Post> dislikedPost = new HashSet<>();
+
 
     public User() {
     }
@@ -94,6 +113,10 @@ public class User {
         return active;
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -119,6 +142,11 @@ public class User {
         newRole.addUser(this);
     }
 
+    public void removeRole(){
+        roleList.remove(0);
+    }
+
+
     public List<Post> getPostList() {
         return postList;
     }
@@ -133,6 +161,28 @@ public class User {
         }
         postList.add(post);
         post.setUser(this);
+    }
+
+    public Set<Post> getLikedPost() {
+        return likedPost;
+    }
+
+    public void setLikedPost(Set<Post> likedPost) {
+        this.likedPost = likedPost;
+    }
+
+    public Set<Post> getDislikedPost() {
+        return dislikedPost;
+    }
+
+    public void setDislikedPost(Set<Post> dislikedPost) {
+        this.dislikedPost = dislikedPost;
+    }
+
+    public void removePost(Post post) {
+        if (post != null){
+            postList.remove(post);
+        }
     }
 
     @Override

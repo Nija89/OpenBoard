@@ -20,4 +20,20 @@ public interface UserDAO {
 
     List<Post> findAllUserPost();
 
+    List<User> findAllMemberUser();
+
+    List<User> findAllModeratorUser();
+
+    List<User> findDisabledUser();
+
+    void promoteUserById(int id);
+
+    void deleteUserById(int id);
+
+    void disableUserById(int id);
+
+    void enableUserById(int id);
+
+    void demoteUserById(int id);
+
 }
