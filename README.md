@@ -4,6 +4,8 @@ Open Board is a dynamic website that allows multiple users to sign up, log in, a
 
 Public posts allow users to interact with them by liking or disliking. Additionally, the website features a page that showcases the top 10 posts based on user likes and dislikes, ensuring a dynamic and engaging experience.
 
+---
+![image alt](https://github.com/Nija89/OpenBoard/blob/c220590d3e6a4949e7fed8419126bd6c7c2adb1c/src/main/resources/static/images/1.png)
 
 ### Feature User Roles:
 
