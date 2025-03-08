@@ -4,14 +4,7 @@ Open Board is a dynamic website that allows multiple users to sign up, log in, a
 
 Public posts allow users to interact with them by liking or disliking. Additionally, the website features a page that showcases the top 10 posts based on user likes and dislikes, ensuring a dynamic and engaging experience.
 
----
-![image alt](https://github.com/Nija89/OpenBoard/blob/c220590d3e6a4949e7fed8419126bd6c7c2adb1c/src/main/resources/static/images/1.png)
-![image alt](https://github.com/Nija89/OpenBoard/blob/dc5fd53969fda9bbd90e1d26555730ae3e0c3a0e/src/main/resources/static/images/2.png)
-![image alt](https://github.com/Nija89/OpenBoard/blob/dc5fd53969fda9bbd90e1d26555730ae3e0c3a0e/src/main/resources/static/images/3.png)
-![image alt](https://github.com/Nija89/OpenBoard/blob/dc5fd53969fda9bbd90e1d26555730ae3e0c3a0e/src/main/resources/static/images/5.png)
-
-### Feature User Roles:
-
+The platform implements role-based access control using Spring Security, with the following roles:
 1. Admin:
 - Can manage users (enable, disable, change roles). 
 - Can delete any public  post.
@@ -25,6 +18,15 @@ Public posts allow users to interact with them by liking or disliking. Additiona
 - Can create, edit, and delete their own posts.
 - Can like/dislike public posts.
 - Can view the Top 10 Posts page.
+  
+---
+
+![image alt](https://github.com/Nija89/OpenBoard/blob/c220590d3e6a4949e7fed8419126bd6c7c2adb1c/src/main/resources/static/images/1.png)
+![image alt](https://github.com/Nija89/OpenBoard/blob/dc5fd53969fda9bbd90e1d26555730ae3e0c3a0e/src/main/resources/static/images/2.png)
+![image alt](https://github.com/Nija89/OpenBoard/blob/dc5fd53969fda9bbd90e1d26555730ae3e0c3a0e/src/main/resources/static/images/3.png)
+![image alt](https://github.com/Nija89/OpenBoard/blob/dc5fd53969fda9bbd90e1d26555730ae3e0c3a0e/src/main/resources/static/images/5.png)
+
+
 
 
 ### Post Visibility:
